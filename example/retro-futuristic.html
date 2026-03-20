@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STARLINE 2847 | Retro-Futuristic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neon-cyan: #00f5d4;
+            --neon-pink: #ff6b9d;
+            --deep-space: #0d0d1a;
+            --cosmic-purple: #1a1a2e;
+            --retro-teal: #00b4a6;
+            --retro-coral: #ff7f6e;
+            --cream: #f5f0e6;
+            --gold-accent: #ffd700;
+        }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--deep-space);
+            color: var(--cream);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: var(--min-opacity); transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.1) 2px,
+                rgba(0, 0, 0, 0.1) 4px
+            );
+        }
+
+        .crt-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+        }
+
+        header {
+            position: relative;
+            z-index: 10;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 3px solid var(--neon-cyan);
+            background: linear-gradient(180deg, rgba(26, 26, 46, 0.9) 0%, transparent 100%);
+        }
+
+        .logo-container {
+            display: inline-block;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 8vw, 5rem);
+            font-weight: 900;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--cream) 50%, var(--neon-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 60px rgba(0, 245, 212, 0.5);
+            animation: glow-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(0, 245, 212, 0.4)); }
+            50% { filter: drop-shadow(0 0 40px rgba(255, 107, 157, 0.6)); }
+        }
+
+        .subtitle {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(0.7rem, 2vw, 1rem);
+            letter-spacing: 0.8em;
+            color: var(--retro-teal);
+            margin-top: 0.5rem;
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .nav-console {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 1.5rem;
+            background: rgba(13, 13, 26, 0.8);
+            border-bottom: 2px solid var(--retro-coral);
+        }
+
+        .nav-item {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            color: var(--cream);
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid transparent;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 212, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-item:hover::before {
+            left: 100%;
+        }
+
+        .nav-item:hover {
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 245, 212, 0.3), inset 0 0 20px rgba(0, 245, 212, 0.1);
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .hero-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .hero-content {
+            animation: slideIn 1s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .hero-tagline {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.3em;
+            color: var(--neon-pink);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(255, 107, 157, 0.5);
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title span {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 20px rgba(0, 245, 212, 0.5);
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(245, 240, 230, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        .retro-button {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            padding: 1rem 2.5rem;
+            background: transparent;
+            color: var(--neon-cyan);
+            border: 3px solid var(--neon-cyan);
+            border-radius: 50px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+        }
+
+        .retro-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--neon-cyan);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.5s ease;
+        }
+
+        .retro-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .retro-button:hover {
+            color: var(--deep-space);
+            box-shadow: 0 0 40px rgba(0, 245, 212, 0.6);
+        }
+
+        .retro-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .planet-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            box-shadow: 
+                inset -30px -30px 60px rgba(0, 0, 0, 0.5),
+                inset 10px 10px 30px rgba(255, 255, 255, 0.1),
+                0 0 60px rgba(0, 180, 166, 0.4);
+        }
+
+        .planet-main {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--retro-teal) 0%, #006666 100%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .planet-ring {
+            width: 300px;
+            height: 80px;
+            background: linear-gradient(90deg, transparent 0%, var(--gold-accent) 20%, transparent 40%, var(--cream) 60%, transparent 80%, var(--retro-coral) 100%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotateX(75deg);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: ring-rotate 20s linear infinite;
+        }
+
+        @keyframes ring-rotate {
+            from { transform: translate(-50%, -50%) rotateX(75deg) rotateZ(0deg); }
+            to { transform: translate(-50%, -50%) rotateX(75deg) rotateZ(360deg); }
+        }
+
+        .moon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #888 0%, #444 100%);
+            top: 20%;
+            right: 15%;
+            box-shadow: 
+                inset -5px -5px 15px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .moon::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            top: 15px;
+            left: 20px;
+        }
+
+        .features-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 0.3em;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--cream);
+            position: relative;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '◆';
+            color: var(--retro-coral);
+            margin: 0 1rem;
+            text-shadow: 0 0 10px var(--retro-coral);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(145deg, rgba(26, 26, 46, 0.9) 0%, rgba(13, 13, 26, 0.9) 100%);
+            border: 2px solid rgba(0, 245, 212, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 245, 212, 0.2);
+            border-color: var(--neon-cyan);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+            color: var(--neon-cyan);
+        }
+
+        .feature-description {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: rgba(245, 240, 230, 0.7);
+        }
+
+        .terminal-section {
+            background: rgba(13, 13, 26, 0.95);
+            border: 3px solid var(--retro-teal);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot:nth-child(1) { background: #ff5f56; }
+        .terminal-dot:nth-child(2) { background: #ffbd2e; }
+        .terminal-dot:nth-child(3) { background: #27ca40; }
+
+        .terminal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            color: var(--retro-teal);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .terminal-body {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: var(--neon-cyan);
+        }
+
+        .terminal-line {
+            opacity: 0;
+            animation: typeLine 0.5s ease forwards;
+        }
+
+        @keyframes typeLine {
+            to { opacity: 1; }
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: var(--neon-cyan);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(26, 26, 46, 0.7);
+            border: 2px solid rgba(255, 107, 157, 0.3);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 30px rgba(255, 107, 157, 0.2);
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--neon-pink);
+            text-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+        }
+
+        .stat-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--cream);
+            margin-top: 0.5rem;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 245, 212, 0.1) 50%, transparent 100%);
+            border-radius: 30px;
+            position: relative;
+        }
+
+        .cta-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-description {
+            font-size: 1.1rem;
+            color: rgba(245, 240, 230, 0.8);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 2px solid rgba(0, 245, 212, 0.3);
+            margin-top: 2rem;
+        }
+
+        .footer-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            color: rgba(245, 240, 230, 0.5);
+        }
+
+        .footer-text span {
+            color: var(--neon-cyan);
+        }
+
+        @media (max-width: 900px) {
+            .hero-section {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .planet-container {
+                height: 300px;
+                order: -1;
+            }
+
+            .stats-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-console {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+
+            .planet-main {
+                width: 150px;
+                height: 150px;
+            }
+
+            .planet-ring {
+                width: 220px;
+                height: 60px;
+            }
+
+            .moon {
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="starfield" id="starfield"></div>
+    <div class="scanlines"></div>
+    <div class="crt-effect"></div>
+
+    <header>
+        <div class="logo-container">
+            <h1>STARLINE</h1>
+            <p class="subtitle">INTERSTELLAR COURIER // EST. 2847</p>
+        </div>
+    </header>
+
+    <nav class="nav-console">
+        <a href="#" class="nav-item">TRANSMISSIONS</a>
+        <a href="#" class="nav-item">DESTINATIONS</a>
+        <a href="#" class="nav-item">FLOTILLA</a>
+        <a href="#" class="nav-item">CARGO MANIFEST</a>
+        <a href="#" class="nav-item">COMM LINK</a>
+    </nav>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <p class="hero-tagline">★ BEYOND THE HORIZON ★</p>
+                <h2 class="hero-title">Your Gateway to the <span>Cosmos</span> Awaits</h2>
+                <p class="hero-description">
+                    Experience the pinnacle of retro-futuristic interstellar travel. 
+                    From the neon-lit stations of Mars to the crystal oceans of Europa, 
+                    Starline transports you in style across the solar system and beyond.
+                </p>
+                <button class="retro-button">
+                    <span>Initiate Launch Sequence</span>
+                </button>
+            </div>
+            <div class="planet-container">
+                <div class="planet planet-main"></div>
+                <div class="planet planet-ring"></div>
+                <div class="planet moon"></div>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <h3 class="section-title">Ship Amenities</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🚀</span>
+                    <h4 class="feature-title">Ion Propulsion</h4>
+                    <p class="feature-description">
+                        Advanced ion drive technology ensures smooth acceleration 
+                        with breathtaking views of the cosmos from every cabin.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🛸</span>
+                    <h4 class="feature-title">Holodeck Suites</h4>
+                    <p class="feature-description">
+                        Immersive holographic entertainment systems in every suite. 
+                        Replicate any destination virtually during your journey.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🌟</span>
+                    <h4 class="feature-title">Zero-G Lounges</h4>
+                    <p class="feature-description">
+                        Experience true weightlessness in our patented gravity 
+                        suspension chambers with panoramic observation decks.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🤖</span>
+                    <h4 class="feature-title">Android Crew</h4>
+                    <p class="feature-description">
+                        Dedicated android service crew available 24/7, learning 
+                        your preferences to provide personalized stellar service.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="terminal-section">
+            <div class="terminal-header">
+                <div class="terminal-dot"></div>
+                <div class="terminal-dot"></div>
+                <div class="terminal-dot"></div>
+            </div>
+            <p class="terminal-title">// SYSTEM ACCESS TERMINAL v7.2.1</p>
+            <div class="terminal-body" id="terminal">
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <div class="stat-item">
+                <div class="stat-number" data-target="2847">0</div>
+                <div class="stat-label">Year Established</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="156">0</div>
+                <div class="stat-label">Destinations</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="9999">0</div>
+                <div class="stat-label">Light Years Range</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="100">0</div>
+                <div class="stat-label">% Safety Rating</div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h3 class="cta-title">Ready for Departure?</h3>
+            <p class="cta-description">
+                Book your journey across the stars today. Experience the romance 
+                of space travel with Starline — where yesterday's future meets 
+                tomorrow's technology.
+            </p>
+            <button class="retro-button">
+                <span>Reserve Your Cabin</span>
+            </button>
+        </section>
+    </main>
+
+    <footer>
+        <p class="footer-text">
+            © <span>STARLINE CORPORATION</span> // CLASSIFIED // ALL SYSTEMS NOMINAL
+        </p>
+    </footer>
+
+    <script>
+        function createStarfield() {
+            const starfield = document.getElementById('starfield');
+            const starCount = 200;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                const size = Math.random() * 3 + 1;
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const duration = Math.random() * 3 + 2;
+                const minOpacity = Math.random() * 0.3 + 0.2;
+                const delay = Math.random() * 5;
+
+                star.style.cssText = `
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}%;
+                    top: ${y}%;
+                    --duration: ${duration}s;
+                    --min-opacity: ${minOpacity};
+                    animation-delay: ${delay}s;
+                `;
+
+                starfield.appendChild(star);
+            }
+        }
+
+        function typewriterEffect() {
+            const terminal = document.getElementById('terminal');
+            const lines = [
+                '> STARLINE SYSTEM ONLINE...',
+                '> CONNECTING TO CENTRAL HUB...',
+                '> AUTHENTICATION: CLEARED',
+                '> WELCOME, COMMANDER',
+                '> CURRENT DATE: 2847.03.20',
+                '> NEXT DEPARTURE: 19:00 UTC',
+                '> AVAILABLE SLOTS: 47',
+                '> DESTINATION: Europa Station',
+                '> ESTIMATED TRAVEL TIME: 72 HOURS',
+                '> VOYAGE STATUS: <span style="color: #27ca40;">BOOK NOW</span>',
+                '>'
+            ];
+
+            let lineIndex = 0;
+            let charIndex = 0;
+
+            function typeLine() {
+                if (lineIndex < lines.length) {
+                    const line = document.createElement('div');
+                    line.className = 'terminal-line';
+                    line.style.animationDelay = `${lineIndex * 0.3}s`;
+                    terminal.appendChild(line);
+
+                    const text = lines[lineIndex];
+                    let html = '';
+
+                    if (text.includes('<span')) {
+                        const beforeSpan = text.split('<span')[0];
+                        const spanContent = text.match(/<span[^>]*>([^<]*)<\/span>/)[1];
+                        const afterSpan = text.split('</span>')[1];
+
+                        function typeWithSpan(charIdx, isInsideSpan = false) {
+                            if (charIdx < beforeSpan.length) {
+                                html += beforeSpan[charIdx];
+                                line.innerHTML = html + '<span class="cursor-blink"></span>';
+                                charIndex++;
+                                setTimeout(() => typeWithSpan(charIdx + 1, false), 30);
+                            } else if (!isInsideSpan) {
+                                html += '<span style="color: #27ca40;">';
+                                setTimeout(() => typeWithSpan(0, true), 0);
+                            } else if (charIdx < spanContent.length) {
+                                html += spanContent[charIdx];
+                                line.innerHTML = html + '</span><span class="cursor-blink"></span>';
+                                charIndex++;
+                                setTimeout(() => typeWithSpan(charIdx + 1, true), 30);
+                            } else {
+                                html += '</span>';
+                                line.innerHTML = html;
+                                charIndex = 0;
+                                lineIndex++;
+                                setTimeout(typeLine, 500);
+                            }
+                        }
+                        typeWithSpan(0);
+                    } else {
+                        function type(charIdx) {
+                            if (charIdx < text.length) {
+                                html += text[charIdx];
+                                line.innerHTML = html + '<span class="cursor-blink"></span>';
+                                charIndex++;
+                                setTimeout(() => type(charIdx + 1), 30);
+                            } else {
+                                line.innerHTML = html;
+                                charIndex = 0;
+                                lineIndex++;
+                                setTimeout(typeLine, 500);
+                            }
+                        }
+                        type(0);
+                    }
+                }
+            }
+
+            setTimeout(typeLine, 1000);
+        }
+
+        function animateStats() {
+            const stats = document.querySelectorAll('.stat-number');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = parseInt(entry.target.dataset.target);
+                        let current = 0;
+                        const increment = target / 50;
+                        const duration = 2000;
+                        const stepTime = duration / 50;
+
+                        const counter = setInterval(() => {
+                            current += increment;
+                            if (current >= target) {
+                                entry.target.textContent = target.toLocaleString();
+                                clearInterval(counter);
+                            } else {
+                                entry.target.textContent = Math.floor(current).toLocaleString();
+                            }
+                        }, stepTime);
+
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            stats.forEach(stat => observer.observe(stat));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createStarfield();
+            typewriterEffect();
+            animateStats();
+        });
+    </script>
+</body>
+</html>
