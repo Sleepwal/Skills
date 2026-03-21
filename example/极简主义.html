@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Skills仓库 - 极简技能集合平台">
+    <title>Skills仓库 | 极简技能集合</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #FAFAFA;
+            --bg-secondary: #F0F0F0;
+            --text-primary: #1A1A1A;
+            --text-secondary: #6B6B6B;
+            --accent: #FF4D00;
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body: 'Inter', -apple-system, sans-serif;
+            --space-unit: 8px;
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-weight: 300;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background-color: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s var(--transition-smooth);
+        }
+
+        a:hover {
+            color: var(--accent);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 calc(var(--space-unit) * 4);
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: calc(var(--space-unit) * 3) 0;
+            background: rgba(250, 250, 250, 0.95);
+            backdrop-filter: blur(10px);
+            transition: transform 0.4s var(--transition-smooth), box-shadow 0.4s var(--transition-smooth);
+        }
+
+        .nav.scrolled {
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 calc(var(--space-unit) * 4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: calc(var(--space-unit) * 5);
+            list-style: none;
+        }
+
+        .nav-link {
+            font-size: 0.875rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s var(--transition-smooth);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .nav-menu-btn span {
+            display: block;
+            width: 24px;
+            height: 1px;
+            background: var(--text-primary);
+            transition: transform 0.3s var(--transition-smooth), opacity 0.3s var(--transition-smooth);
+        }
+
+        .nav-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .nav-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .nav-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(var(--space-unit) * 10);
+            align-items: center;
+        }
+
+        .hero-text {
+            max-width: 600px;
+        }
+
+        .hero-eyebrow {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: calc(var(--space-unit) * 4);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s var(--transition-smooth) forwards;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 300;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: calc(var(--space-unit) * 5);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s var(--transition-smooth) 0.1s forwards;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            max-width: 480px;
+            margin-bottom: calc(var(--space-unit) * 6);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s var(--transition-smooth) 0.2s forwards;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 16px 32px;
+            border: 1px solid var(--text-primary);
+            transition: all 0.3s var(--transition-smooth);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s var(--transition-smooth) 0.3s forwards;
+        }
+
+        .hero-cta:hover {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        .hero-cta svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s var(--transition-smooth);
+        }
+
+        .hero-cta:hover svg {
+            transform: translateX(4px);
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-shape {
+            position: absolute;
+            border: 1px solid var(--text-secondary);
+            opacity: 0.2;
+        }
+
+        .hero-shape-1 {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .hero-shape-2 {
+            width: 300px;
+            height: 300px;
+            transform: rotate(45deg);
+            animation: float 8s ease-in-out 1s infinite;
+        }
+
+        .hero-shape-3 {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border-color: var(--accent);
+            opacity: 0.3;
+            animation: float 8s ease-in-out 2s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(5deg); }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Skills Section */
+        .skills {
+            padding: calc(var(--space-unit) * 20) 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: calc(var(--space-unit) * 10);
+            padding-bottom: calc(var(--space-unit) * 4);
+            border-bottom: 1px solid var(--bg-secondary);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            max-width: 400px;
+            text-align: right;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: calc(var(--space-unit) * 4);
+        }
+
+        .skill-card {
+            padding: calc(var(--space-unit) * 6);
+            background: transparent;
+            border: 1px solid var(--bg-secondary);
+            transition: all 0.4s var(--transition-smooth);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s var(--transition-smooth);
+        }
+
+        .skill-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .skill-card:hover {
+            border-color: var(--text-primary);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .skill-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: calc(var(--space-unit) * 4);
+            color: var(--accent);
+        }
+
+        .skill-name {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: calc(var(--space-unit) * 2);
+        }
+
+        .skill-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .skill-count {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+
+        /* About Section */
+        .about {
+            padding: calc(var(--space-unit) * 20) 0;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(var(--space-unit) * 15);
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            margin-bottom: calc(var(--space-unit) * 6);
+        }
+
+        .about-text p {
+            font-size: 1rem;
+            line-height: 1.9;
+            color: rgba(250, 250, 250, 0.7);
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: calc(var(--space-unit) * 6);
+        }
+
+        .stat-item {
+            padding: calc(var(--space-unit) * 4);
+            border: 1px solid rgba(250, 250, 250, 0.1);
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            font-weight: 300;
+            line-height: 1;
+            margin-bottom: calc(var(--space-unit) * 2);
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(250, 250, 250, 0.5);
+        }
+
+        /* Getting Started Section */
+        .getting-started {
+            padding: calc(var(--space-unit) * 20) 0;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: calc(var(--space-unit) * 6);
+        }
+
+        .step-card {
+            padding: calc(var(--space-unit) * 6);
+            position: relative;
+        }
+
+        .step-number {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            font-weight: 300;
+            line-height: 1;
+            color: var(--bg-secondary);
+            margin-bottom: calc(var(--space-unit) * 4);
+        }
+
+        .step-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: calc(var(--space-unit) * 3);
+        }
+
+        .step-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .step-code {
+            margin-top: calc(var(--space-unit) * 4);
+            padding: calc(var(--space-unit) * 3);
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.8125rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        /* Footer */
+        .footer {
+            padding: calc(var(--space-unit) * 10) 0;
+            border-top: 1px solid var(--bg-secondary);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--space-unit) * 2);
+        }
+
+        .footer-logo {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 400;
+        }
+
+        .footer-copy {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: calc(var(--space-unit) * 4);
+            list-style: none;
+        }
+
+        .footer-link {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-link:hover {
+            color: var(--accent);
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-primary);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s var(--transition-smooth);
+        }
+
+        .mobile-nav.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            text-align: center;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            font-family: var(--font-display);
+            font-size: 2rem;
+            padding: calc(var(--space-unit) * 3) 0;
+            transition: color 0.3s var(--transition-smooth);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text {
+                max-width: 100%;
+            }
+
+            .hero-description {
+                max-width: 100%;
+            }
+
+            .hero-visual {
+                display: none;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: calc(var(--space-unit) * 10);
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: calc(var(--space-unit) * 3);
+            }
+
+            .section-subtitle {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .nav-menu-btn {
+                display: flex;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: calc(var(--space-unit) * 4);
+                text-align: center;
+            }
+
+            .about-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s var(--transition-smooth);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            html {
+                scroll-behavior: auto;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" role="navigation" aria-label="主导航">
+        <div class="nav-container">
+            <a href="#" class="nav-logo" aria-label="Skills仓库首页">Skills<span>.</span></a>
+            <ul class="nav-links">
+                <li><a href="#skills" class="nav-link">技能</a></li>
+                <li><a href="#about" class="nav-link">关于</a></li>
+                <li><a href="#getting-started" class="nav-link">入门</a></li>
+                <li><a href="#footer" class="nav-link">联系</a></li>
+            </ul>
+            <button class="nav-menu-btn" aria-label="打开菜单" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" role="dialog" aria-label="移动端导航">
+        <ul class="mobile-nav-links">
+            <li><a href="#skills" class="mobile-nav-link">技能</a></li>
+            <li><a href="#about" class="mobile-nav-link">关于</a></li>
+            <li><a href="#getting-started" class="mobile-nav-link">入门</a></li>
+            <li><a href="#footer" class="mobile-nav-link">联系</a></li>
+        </ul>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <p class="hero-eyebrow">技能集合平台</p>
+                        <h1 id="hero-title" class="hero-title">精简技能<br><em>高效成长</em></h1>
+                        <p class="hero-description">
+                            Skills仓库是一个极简主义的技能管理平台，帮助你系统化地组织、追踪和提升核心能力。以最纯粹的方式，专注于真正重要的技能。
+                        </p>
+                        <a href="#getting-started" class="hero-cta">
+                            开始探索
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="hero-visual" aria-hidden="true">
+                        <div class="hero-shape hero-shape-1"></div>
+                        <div class="hero-shape hero-shape-2"></div>
+                        <div class="hero-shape hero-shape-3"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="skills" aria-labelledby="skills-title">
+            <div class="container">
+                <header class="section-header reveal">
+                    <h2 id="skills-title" class="section-title">技能分类</h2>
+                    <p class="section-subtitle">精选核心技能领域，覆盖职业发展所需的关键能力</p>
+                </header>
+                <div class="skills-grid">
+                    <article class="skill-card reveal">
+                        <svg class="skill-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="8" y="8" width="32" height="32" rx="4"/>
+                            <path d="M16 24h16M16 32h10"/>
+                        </svg>
+                        <h3 class="skill-name">前端开发</h3>
+                        <p class="skill-desc">现代Web技术栈，包括React、Vue生态系统，响应式设计原则与性能优化策略。</p>
+                        <span class="skill-count">24 项技能</span>
+                    </article>
+                    <article class="skill-card reveal">
+                        <svg class="skill-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="24" cy="24" r="16"/>
+                            <path d="M24 14v10l7 7"/>
+                        </svg>
+                        <h3 class="skill-name">后端架构</h3>
+                        <p class="skill-desc">服务端开发与系统设计，API设计、数据库优化、微服务架构与云原生实践。</p>
+                        <span class="skill-count">18 项技能</span>
+                    </article>
+                    <article class="skill-card reveal">
+                        <svg class="skill-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M8 40l8-8m0 0l4-12 12-4m0 0l8 8m-8-8L8 16"/>
+                            <circle cx="36" cy="12" r="4"/>
+                        </svg>
+                        <h3 class="skill-name">DevOps</h3>
+                        <p class="skill-desc">持续集成与部署、容器化技术、监控告警与基础设施即代码的最佳实践。</p>
+                        <span class="skill-count">15 项技能</span>
+                    </article>
+                    <article class="skill-card reveal">
+                        <svg class="skill-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 36V12l12 6-12 6v12"/>
+                            <path d="M24 24h12v12"/>
+                        </svg>
+                        <h3 class="skill-name">数据工程</h3>
+                        <p class="skill-desc">数据管道构建、大数据处理框架、数据建模与商业智能分析的完整链路。</p>
+                        <span class="skill-count">12 项技能</span>
+                    </article>
+                    <article class="skill-card reveal">
+                        <svg class="skill-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="6" y="14" width="36" height="24" rx="2"/>
+                            <path d="M14 22h6M14 28h10"/>
+                            <circle cx="34" cy="26" r="4"/>
+                        </svg>
+                        <h3 class="skill-name">产品设计</h3>
+                        <p class="skill-desc">用户体验研究、交互设计原则、视觉设计系统与设计协作工具链。</p>
+                        <span class="skill-count">20 项技能</span>
+                    </article>
+                    <article class="skill-card reveal">
+                        <svg class="skill-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M24 6v36M6 24h36"/>
+                            <circle cx="24" cy="24" r="8"/>
+                        </svg>
+                        <h3 class="skill-name">软技能</h3>
+                        <p class="skill-desc">沟通协作、项目管理、问题解决与职业发展的非技术核心能力。</p>
+                        <span class="skill-count">16 项技能</span>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about" aria-labelledby="about-title">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-text reveal">
+                        <h2 id="about-title">为什么选择Skills仓库</h2>
+                        <p>
+                            我们相信，真正的技能掌握不在于知道多少工具，而在于深入理解核心概念。Skills仓库采用「少即是多」的设计哲学，只收录每个领域最核心、最经得起时间考验的技能点。
+                        </p>
+                        <p>
+                            每一个技能卡片都经过精心设计，包含清晰的学习路径、实践建议和评估标准，帮助你建立系统化的知识体系，而非碎片化的信息堆砌。
+                        </p>
+                    </div>
+                    <div class="about-stats reveal">
+                        <div class="stat-item">
+                            <div class="stat-number">105</div>
+                            <div class="stat-label">精选技能</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">6</div>
+                            <div class="stat-label">核心领域</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">难度层级</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">∞</div>
+                            <div class="stat-label">成长空间</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Getting Started Section -->
+        <section id="getting-started" class="getting-started" aria-labelledby="getting-started-title">
+            <div class="container">
+                <header class="section-header reveal">
+                    <h2 id="getting-started-title" class="section-title">快速入门</h2>
+                    <p class="section-subtitle">三步开始你的技能精进之旅</p>
+                </header>
+                <div class="steps-grid">
+                    <div class="step-card reveal">
+                        <span class="step-number">01</span>
+                        <h3 class="step-title">浏览技能</h3>
+                        <p class="step-desc">探索不同领域的技能分类，找到你感兴趣或需要提升的方向。</p>
+                        <div class="step-code">浏览 → 选择领域 → 发现技能</div>
+                    </div>
+                    <div class="step-card reveal">
+                        <span class="step-number">02</span>
+                        <h3 class="step-title">规划路径</h3>
+                        <p class="step-desc">根据技能卡片提供的学习路径，制定你的个人成长计划。</p>
+                        <div class="step-code">评估当前 → 设定目标 → 制定计划</div>
+                    </div>
+                    <div class="step-card reveal">
+                        <span class="step-number">03</span>
+                        <h3 class="step-title">持续实践</h3>
+                        <p class="step-desc">通过实践项目验证学习成果，定期回顾并调整你的技能组合。</p>
+                        <div class="step-code">学习 → 实践 → 复盘 → 精进</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <a href="#" class="footer-logo">Skills<span style="color: var(--accent);">.</span></a>
+                    <p class="footer-copy">© 2024 Skills仓库. 极简设计，精进技能.</p>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="#skills" class="footer-link">技能</a></li>
+                    <li><a href="#about" class="footer-link">关于</a></li>
+                    <li><a href="#getting-started" class="footer-link">入门</a></li>
+                    <li><a href="#" class="footer-link">GitHub</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            'use strict';
+
+            const nav = document.querySelector('.nav');
+            const navMenuBtn = document.querySelector('.nav-menu-btn');
+            const mobileNav = document.querySelector('.mobile-nav');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            const revealElements = document.querySelectorAll('.reveal');
+
+            function handleScroll() {
+                if (window.scrollY > 50) {
+                    nav.classList.add('scrolled');
+                } else {
+                    nav.classList.remove('scrolled');
+                }
+            }
+
+            function toggleMobileNav() {
+                const isOpen = mobileNav.classList.toggle('active');
+                navMenuBtn.classList.toggle('active');
+                navMenuBtn.setAttribute('aria-expanded', isOpen);
+                document.body.style.overflow = isOpen ? 'hidden' : '';
+            }
+
+            function closeMobileNav() {
+                mobileNav.classList.remove('active');
+                navMenuBtn.classList.remove('active');
+                navMenuBtn.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+
+            function handleReveal() {
+                const windowHeight = window.innerHeight;
+                revealElements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const revealPoint = windowHeight - 100;
+                    if (elementTop < revealPoint) {
+                        element.classList.add('active');
+                    }
+                });
+            }
+
+            function smoothScroll(target) {
+                const element = document.querySelector(target);
+                if (element) {
+                    const headerOffset = 80;
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+
+            navMenuBtn.addEventListener('click', toggleMobileNav);
+
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = link.getAttribute('href');
+                    closeMobileNav();
+                    setTimeout(() => smoothScroll(target), 300);
+                });
+            });
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const target = this.getAttribute('href');
+                    if (target === '#') return;
+                    e.preventDefault();
+                    smoothScroll(target);
+                });
+            });
+
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            window.addEventListener('scroll', handleReveal, { passive: true });
+            window.addEventListener('load', handleReveal);
+
+            handleScroll();
+        })();
+    </script>
+</body>
+</html>
